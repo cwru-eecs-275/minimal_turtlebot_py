@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<package>
   <name>minimal_turtlebot_py</name>
   <version>0.0.2</version>
   <description>The minimal_turtlebot_py package</description>
