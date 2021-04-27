@@ -3,16 +3,19 @@
 import rospy
 
 from std_msgs.msg import String
-from geometry_msgs.msg import Twist, PoseWithCovarianceStamped
+from geometry_msgs.msg import Twist, PoseStamped, PoseWithCovarianceStamped
 from sensor_msgs.msg import LaserScan, Imu, Image
 from nav_msgs.msg import Odometry
 from kobuki_msgs.msg import CliffEvent, Sound, SensorState, WheelDropEvent, BumperEvent
 
 from TurtleBotInputs import TurtleBotInputs as turtlebotInputs
 
-from turtlebot_controller import turtlebot_controller
+from turtlebot_controller import turtlebot_controller, _SET_GOAL
 
 global localTurtleBotInputs, localSoundValue, localLinearSpeed, startUpTimer, localAngularSpeed, soundValueUpdateCounter, amcl_present
+
+def poseCallback(pose):
+    _SET_GOAL(pose.pose.position.x, pose.pose.position.y)
 
 def wheelDropCallback(wheel_drop_holder):
     global localTurtleBotInputs, localSoundValue, localLinearSpeed, startUpTimer, localAngularSpeed, soundValueUpdateCounter, amcl_present
@@ -140,7 +143,7 @@ def main():
     my_core_subscription = rospy.Subscriber('mobile_base/sensors/core', SensorState, coreCallback)
     my_odom_subscription = rospy.Subscriber('odom', Odometry, odomCallback)
     my_amcl_subscription = rospy.Subscriber('amcl_pose', PoseWithCovarianceStamped, amclCallback)
-
+    my_pose2d_subscription = rospy.Subscriber('goal_pose2d', PoseStamped, poseCallback)
     scanSubscription = rospy.Subscriber('scan', LaserScan, scanCallback)
     
     # Publish to the velocity topic
