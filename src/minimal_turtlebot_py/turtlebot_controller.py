@@ -1,5 +1,8 @@
 import rospy
 
+import angles
+from kobuki_msgs.msg import Sound
+
 global global_x, global_y
 global_x = float('nan')
 global_y = float('nan')
@@ -11,16 +14,20 @@ def turtlebot_controller(localTurtleBotInputs, localSoundValue, localLinearSpeed
     # Get the coordinates 
     x, y = GET_POSE()
 
-    # Sends log once per second
+	# Send a debug message throttled to 1 Hz.
     rospy.loginfo_throttle(1, "x: %2.2f; y %2.2f" % (x, y))
-    # ROSPY log functions, all have throttle options
-    # "debug" is not the level that should be used here
-    # rospy.logdebug("x: %2.2f; y %2.2f" % (x, y))
-    # rospy.loginfo("x: %2.2f; y %2.2f" % (x, y))
-    # rospy.logwarn("x: %2.2f; y %2.2f" % (x, y))
-    # rospy.logerr("x: %2.2f; y %2.2f" % (x, y))
-    # rospy.logfatal("x: %2.2f; y %2.2f" % (x, y))
+    # Send a debug message every loop.
+    # rospy.loginfo_throttle("x: %2.2f; y %2.2f" % (x, y))
     
+	# here are the various sound value enumeration options
+	# Sound.SOUND_OFF
+	# Sound.SOUND_RECHARGE
+	# Sound.SOUND_BUTTON
+	# Sound.SOUND_ERROR
+	# Sound.SOUND_CLEANINGSTART
+	# Sound.SOUND_CLEANINGEND 
+	localSoundValue = Sound.SOUND_OFF
+
     return localTurtleBotInputs, localSoundValue, localLinearSpeed, localAngularSpeed
 
 # In Python, it is customary to begin element names with underscores
